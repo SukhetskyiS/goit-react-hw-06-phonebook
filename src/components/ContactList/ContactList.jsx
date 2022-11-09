@@ -1,6 +1,16 @@
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from '../redux/contactsSlice.js';
+import { getFilteredContacts } from 'redux/selectors';
 
-export function ContactList({ formContactsList, deleteContact }) {
+export function ContactList() {
+  const formContactsList = useSelector(getFilteredContacts);
+
+  const dispatch = useDispatch();
+
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
+  };
+
   return (
     <ul>
       {formContactsList.map(item => (
@@ -8,7 +18,7 @@ export function ContactList({ formContactsList, deleteContact }) {
           <p className="contact-data">
             {item.name}: {item.number}
           </p>
-          <button onClick={() => deleteContact(item.id)} type="button">
+          <button onClick={() => handleDeleteContact(item.id)} type="button">
             Delete
           </button>
         </li>
@@ -16,14 +26,3 @@ export function ContactList({ formContactsList, deleteContact }) {
     </ul>
   );
 }
-
-ContactList.propTypes = {
-  formContactsList: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      number: PropTypes.string,
-    })
-  ),
-  deleteContact: PropTypes.func,
-};
